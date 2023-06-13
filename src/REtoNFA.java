@@ -7,7 +7,7 @@ public class REtoNFA {
         // char array ->
         NFA firstNFA, secondNFA, tempNFA;
         Stack<NFA> stack = new Stack<>();
-        char[] REarray = null;
+        char[] REarray = {'a', 'b'/*, 'c', '.', '+'*/, '*', 'd', '.'};
         for (char c : REarray){
             switch(c){
                 case '+':
@@ -18,7 +18,8 @@ public class REtoNFA {
                     break;
 
                 case '*':
-
+                    firstNFA = stack.pop();
+                    stack.push(starNFA(firstNFA));
                     break;
 
                 case '.':
@@ -38,8 +39,8 @@ public class REtoNFA {
     public NFA unionOfNFAs(NFA first, NFA second){
         NFA result = new NFA();
         int numOfStates = first.states.size() + second.states.size();
-        result.start = new State((numOfStates + 1) + "");
-        result.end = new State((numOfStates + 2) + "");
+        result.start = new State((numOfStates + 2 /*start, end*/+ 1) + "");
+        result.end = new State((numOfStates + 2 + 2) + "");
         result.start.transitions.set(0, new Transition('$', first.start));
         result.start.transitions.set(0, new Transition('$', second.start));
         //result.states.add(result.start);
@@ -66,6 +67,16 @@ public class REtoNFA {
         }
         left.end = temp;
         return left;
+    }
+    public NFA starNFA(NFA nfa){
+        nfa.start.transitions.add(new Transition('$', nfa.end));
+        nfa.end.transitions.add(new Transition('$', nfa.start));
+        return nfa;
+    }
+
+    public static void main(String[] args) {
+        REtoNFA test = null;
+        test.createNFAFromRE("");
     }
 
 
