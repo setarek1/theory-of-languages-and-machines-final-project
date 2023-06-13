@@ -2,13 +2,20 @@ import java.util.ArrayList;
 
 public class NFA {
     State start, end;
-    ArrayList<State> states; // not including start and end
+    ArrayList<State> states = new ArrayList<>(); // not including start and end
+    public NFA(int num){
+        start = new State(num + "");
+        end = new State((num + 1) + "");
+    }
     public NFA(){}
     public NFA(char c){
         start = new State("0");
         end = new State("1");
         start.transitions.add(new Transition(c, end));
 
+    }
+    public void changeStateName(String newName, State s){
+        s.name = newName;
     }
     public void printTransitions(){
         String string = null;

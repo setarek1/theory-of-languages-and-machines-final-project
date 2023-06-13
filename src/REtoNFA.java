@@ -7,7 +7,7 @@ public class REtoNFA {
         // char array ->
         NFA firstNFA, secondNFA, tempNFA;
         Stack<NFA> stack = new Stack<>();
-        char[] REarray = {'a', 'b'/*, 'c', '.', '+'*/, '*', 'd', '.'};
+        char[] REarray = {'a'/*, 'b', 'c', '.', '+', '*', 'd'*/, '*'};
         for (char c : REarray){
             switch(c){
                 case '+':
@@ -19,7 +19,8 @@ public class REtoNFA {
 
                 case '*':
                     firstNFA = stack.pop();
-                    stack.push(starNFA(firstNFA));
+                    tempNFA = starNFA(firstNFA);
+                    stack.push(tempNFA);
                     break;
 
                 case '.':
@@ -41,8 +42,12 @@ public class REtoNFA {
         int numOfStates = first.states.size() + second.states.size();
         result.start = new State((numOfStates + 2 /*start, end*/+ 1) + "");
         result.end = new State((numOfStates + 2 + 2) + "");
-        result.start.transitions.set(0, new Transition('$', first.start));
-        result.start.transitions.set(0, new Transition('$', second.start));
+        if (result.start.transitions.size() == 0)
+            result.start.transitions.add(0, new Transition('$', first.start));
+        else result.start.transitions.set(0, new Transition('$', first.start));
+        if (result.start.transitions.size() > 1)
+        result.start.transitions.set(1, new Transition('$', second.start));
+        else result.start.transitions.add(new Transition('$', second.start));
         //result.states.add(result.start);
         first.end.transitions.add(new Transition('$', result.end));
         second.end.transitions.add(new Transition('$', result.end));
@@ -61,24 +66,32 @@ public class REtoNFA {
     public NFA concatenationOfNFAs(NFA left, NFA right){
         State temp;
         temp = left.end;
-        temp.transitions.add(new Transition('$', right.start));
+        int numOfStates = right.states.size() + left.states.size();
+        right.start.setName((numOfStates + 2 /*start, end*/+ 1) + "");
+        right.end.setName((numOfStates + 2 /*start, end*/+ 2) + "");
+        //temp.transitions.add(new Transition('$', right.start));
+        left.end.transitions.add(new Transition('$', right.start));
+        left.states.add(right.start);
         for (int i = 0; i < right.states.size(); i++) {
             left.states.add(right.states.get(i));
         }
-        left.end = temp;
+        left.states.add(right.end);
+        //left.end = temp;
         return left;
     }
-    public NFA starNFA(NFA nfa){
-        nfa.start.transitions.add(new Transition('$', nfa.end));
-        nfa.end.transitions.add(new Transition('$', nfa.start));
+    public NFA starNFA(NFA first){
+        NFA nfa = new NFA(first.states.size()+2);
+        nfa.start.transitions.add(new Transition('$', first.end));
+        nfa.start.transitions.add(new Transition('$', first.start));
+        nfa.states.add(first.start);
+        first.end.transitions.add(new Transition('$', nfa.end));
+        for (int i = 0; i < first.states.size(); i++) {
+            nfa.states.add(first.states.get(i));
+        }
+        nfa.states.add(first.end);
+        nfa.end.transitions.add(new Transition('$', first.start));
         return nfa;
     }
-
-    public static void main(String[] args) {
-        REtoNFA test = null;
-        test.createNFAFromRE("");
-    }
-
 
 
 
