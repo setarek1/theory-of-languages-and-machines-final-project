@@ -28,8 +28,8 @@ public class REtoNFA {
                     break;
 
                 case '.':
-                    firstNFA = stack.pop();
                     secondNFA = stack.pop();
+                    firstNFA = stack.pop();
                     tempNFA = concatenationOfNFAs(firstNFA, secondNFA);
                     stack.push(tempNFA);
 
@@ -138,7 +138,9 @@ public class REtoNFA {
     }
     public NFA concatenationOfNFAs(NFA left, NFA right){ //fix state names
         int numOfStates = right.states.size() + left.states.size();
-        NFA nfa = new NFA(numOfStates + 3);
+        NFA nfa = new NFA(numOfStates + 4);
+        left.start.setName((numOfStates + 2) + "");
+        right.end.setName((numOfStates + 3) + "");
         /*left.start.setName((numOfStates + 2 *//*start, end*//*+ 1) + "");
         left.end.setName((numOfStates + 2 *//*start, end*//*+ 2) + "");
         right.start.setName((numOfStates + 2 *//*start, end*//*+ 1) + "");
@@ -153,6 +155,7 @@ public class REtoNFA {
         nfa.states.add(left.end);
         for (int i = 0; i < left.states.size(); i++) {
             nfa.states.add(left.states.get(i));
+
         }
         for (int i = 0; i < right.states.size(); i++) {
             nfa.states.add(right.states.get(i));
