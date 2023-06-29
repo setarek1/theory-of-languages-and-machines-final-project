@@ -1,13 +1,17 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 public class REtoNFA {
+    private static final char[] nonSymbols = {'+', '*', '.', '(', ')'};
     public void createNFAFromRE(String re){
-        // join ->
+        // add '.'
+        //String concatAdded = addConcat(re);
         // postfix ->
         // char array ->
         NFA firstNFA, secondNFA, tempNFA;
         Stack<NFA> stack = new Stack<>();
-        char[] REarray = {'a'/*, 'b', 'c', '.', '+', '*', 'd'*/, '*'};
+        char[] REarray = computePostfix(addConcat(re)).toCharArray();
         for (char c : REarray){
             switch(c){
                 case '+':
@@ -36,7 +40,76 @@ public class REtoNFA {
             }
         }
     }
+    private static boolean comparePrecedence(char a, char b) {
+        String precedence = "+.*";
+        return precedence.indexOf(a) > precedence.indexOf(b);
+    }
+    String computePostfix(String regex) {
+        StringBuilder result = new StringBuilder();
+        List<Character> stack = new ArrayList<>();
 
+        for (char c : regex.toCharArray()) {
+            if (!isNonSymbol(c) || c == '*') {
+                result.append(c);
+            } else if (c == ')') {
+                while (!stack.isEmpty() && stack.get(stack.size() - 1) != '(') {
+                    result.append(stack.remove(stack.size() - 1));
+                }
+                stack.remove(stack.size() - 1);
+            } else if (c == '(') {
+                stack.add(c);
+            } else if (stack.isEmpty() || stack.get(stack.size() - 1) == '(' || comparePrecedence(c, stack.get(stack.size() - 1))) {
+                stack.add(c);
+            } else {
+                while (!stack.isEmpty() && stack.get(stack.size() - 1) != '(' && !comparePrecedence(c, stack.get(stack.size() - 1))) {
+                    result.append(stack.remove(stack.size() - 1));
+                }
+                stack.add(c);
+            }
+        }
+
+        while (!stack.isEmpty()) {
+            result.append(stack.remove(stack.size() - 1));
+        }
+
+        return result.toString();
+    }
+    public String addConcat(String regex) {
+        StringBuilder result = new StringBuilder();
+        int length = regex.length();
+
+        for (int i = 0; i < length - 1; i++) {
+            result.append(regex.charAt(i));
+            if (!isNonSymbol(regex.charAt(i))) {
+                if (!isNonSymbol(regex.charAt(i + 1)) || regex.charAt(i + 1) == '(') {
+                    result.append('.');
+                }
+            }
+            if (regex.charAt(i) == ')' && regex.charAt(i + 1) == '(') {
+                result.append('.');
+            }
+            if (regex.charAt(i) == '*' && regex.charAt(i + 1) == '(') {
+                result.append('.');
+            }
+            if (regex.charAt(i) == '*' && !isNonSymbol(regex.charAt(i + 1))) {
+                result.append('.');
+            }
+            if (regex.charAt(i) == ')' && !isNonSymbol(regex.charAt(i + 1))) {
+                result.append('.');
+            }
+        }
+
+        result.append(regex.charAt(length - 1));
+        return result.toString();
+    }
+    private static boolean isNonSymbol(char c) {
+        for (char symbol : nonSymbols) {
+            if (c == symbol) {
+                return true;
+            }
+        }
+        return false;
+    }
     public NFA unionOfNFAs(NFA first, NFA second){
         NFA result = new NFA();
         int numOfStates = first.states.size() + second.states.size();
@@ -63,21 +136,32 @@ public class REtoNFA {
     public NFA singleCharNFA(char ch){
         return new NFA(ch);
     }
-    public NFA concatenationOfNFAs(NFA left, NFA right){
-        State temp;
-        temp = left.end;
+    public NFA concatenationOfNFAs(NFA left, NFA right){ //fix state names
         int numOfStates = right.states.size() + left.states.size();
-        right.start.setName((numOfStates + 2 /*start, end*/+ 1) + "");
-        right.end.setName((numOfStates + 2 /*start, end*/+ 2) + "");
+        NFA nfa = new NFA(numOfStates + 3);
+        /*left.start.setName((numOfStates + 2 *//*start, end*//*+ 1) + "");
+        left.end.setName((numOfStates + 2 *//*start, end*//*+ 2) + "");
+        right.start.setName((numOfStates + 2 *//*start, end*//*+ 1) + "");
+        right.end.setName((numOfStates + 2 *//*start, end*//*+ 2) + "");*/
         //temp.transitions.add(new Transition('$', right.start));
+        right.end.transitions.add(new Transition('$', nfa.end));
         left.end.transitions.add(new Transition('$', right.start));
-        left.states.add(right.start);
-        for (int i = 0; i < right.states.size(); i++) {
-            left.states.add(right.states.get(i));
+        nfa.start.transitions.add(new Transition('$', left.start));
+        //left.end.transitions.add(new Transition('$', right.start));
+        //left.states.add(right.start);
+        nfa.states.add(left.start);
+        nfa.states.add(left.end);
+        for (int i = 0; i < left.states.size(); i++) {
+            nfa.states.add(left.states.get(i));
         }
-        left.states.add(right.end);
+        for (int i = 0; i < right.states.size(); i++) {
+            nfa.states.add(right.states.get(i));
+        }
+        nfa.states.add(right.start);
+        nfa.states.add(right.end);
+        //left.states.add(right.end);
         //left.end = temp;
-        return left;
+        return nfa;
     }
     public NFA starNFA(NFA first){
         NFA nfa = new NFA(first.states.size()+2);
