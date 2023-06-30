@@ -4,6 +4,8 @@ import java.util.Stack;
 
 public class REtoNFA {
     private static final char[] nonSymbols = {'+', '*', '.', '(', ')'};
+    static ArrayList<Character> nfaSymbols = new ArrayList<>();
+
     public void createNFAFromRE(String re){
         // add '.'
         //String concatAdded = addConcat(re);
@@ -34,11 +36,19 @@ public class REtoNFA {
                     stack.push(tempNFA);
 
                     break;
-
                 default:
                     stack.push(singleCharNFA(c));
+                    addToSymbols(c);
+
             }
         }
+    }
+    private void addToSymbols(char c){
+        for (Character s : nfaSymbols){
+            if (s == c)
+                return;
+        }
+        nfaSymbols.add(c);
     }
     private static boolean comparePrecedence(char a, char b) {
         String precedence = "+.*";
