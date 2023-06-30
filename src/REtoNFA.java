@@ -6,7 +6,7 @@ public class REtoNFA {
     private static final char[] nonSymbols = {'+', '*', '.', '(', ')'};
     static ArrayList<Character> nfaSymbols = new ArrayList<>();
 
-    public void createNFAFromRE(String re){
+    public NFA createNFAFromRE(String re){
         // add '.'
         //String concatAdded = addConcat(re);
         // postfix ->
@@ -42,6 +42,7 @@ public class REtoNFA {
 
             }
         }
+        return stack.pop();
     }
     private void addToSymbols(char c){
         for (Character s : nfaSymbols){
@@ -182,12 +183,23 @@ public class REtoNFA {
         nfa.start.transitions.add(new Transition('$', first.start));
         nfa.states.add(first.start);
         first.end.transitions.add(new Transition('$', nfa.end));
+        first.end.transitions.add(new Transition('$', first.start));
         for (int i = 0; i < first.states.size(); i++) {
             nfa.states.add(first.states.get(i));
         }
         nfa.states.add(first.end);
-        nfa.end.transitions.add(new Transition('$', first.start));
+        //nfa.end.transitions.add(new Transition('$', first.start));
         return nfa;
+    }
+    public void renameStates(NFA nfa){
+        nfa.start.setName(0 + "");
+        int name = 1;
+        for(State s : nfa.states){
+            s.setName(name + "");
+            name++;
+        }
+        nfa.end.setName(name + "");
+
     }
 
 
