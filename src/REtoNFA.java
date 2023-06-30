@@ -42,7 +42,8 @@ public class REtoNFA {
 
             }
         }
-        return stack.pop();
+        NFA res = renameStates(stack.pop());
+        return res;
     }
     private void addToSymbols(char c){
         for (Character s : nfaSymbols){
@@ -124,8 +125,21 @@ public class REtoNFA {
     public NFA unionOfNFAs(NFA first, NFA second){
         NFA result = new NFA();
         int numOfStates = first.states.size() + second.states.size();
-        result.start = new State((numOfStates + 2 /*start, end*/+ 1) + "");
-        result.end = new State((numOfStates + 2 + 2) + "");
+        //result.start = new State((numOfStates + 2 /*start, end*/+ 1) + "");
+        //result.end = new State((numOfStates + 2 + 2) + "");
+        result.start = new State(0 + "");
+        result.end = new State((numOfStates+5) + "");
+        int n = 1;
+        first.start.setName(n+"");
+        n++;
+        second.start.setName(n+"");
+        n++;
+        first.end.setName(n+"");
+        n++;
+        second.end.setName(n+"");
+        n++;
+        result.states.add(first.start);
+        result.states.add(second.start);
         if (result.start.transitions.size() == 0)
             result.start.transitions.add(0, new Transition('$', first.start));
         else result.start.transitions.set(0, new Transition('$', first.start));
@@ -136,11 +150,19 @@ public class REtoNFA {
         first.end.transitions.add(new Transition('$', result.end));
         second.end.transitions.add(new Transition('$', result.end));
         for (int i = 0; i < first.states.size(); i++) {
+            first.states.get(i).setName(n+"");
             result.states.add(first.states.get(i));
+            n++;
         }
         for (int i = 0; i < second.states.size(); i++) {
+            second.states.get(i).setName(n+"");
             result.states.add(second.states.get(i));
+            n++;
         }
+
+        result.states.add(first.end);
+
+        result.states.add(second.end);
         //result.states.add(result.end);
         return result;
     }
@@ -149,9 +171,12 @@ public class REtoNFA {
     }
     public NFA concatenationOfNFAs(NFA left, NFA right){ //fix state names
         int numOfStates = right.states.size() + left.states.size();
-        NFA nfa = new NFA(numOfStates + 4);
-        left.start.setName((numOfStates + 2) + "");
-        right.end.setName((numOfStates + 3) + "");
+        NFA nfa = new NFA(0);
+        nfa.end.setName((numOfStates+6)+"");
+        left.start.setName(1 + "");
+        left.end.setName((left.states.size()+2)+"");
+        right.start.setName((left.states.size()+3)+"");
+        right.end.setName((numOfStates+2)+ "");
         /*left.start.setName((numOfStates + 2 *//*start, end*//*+ 1) + "");
         left.end.setName((numOfStates + 2 *//*start, end*//*+ 2) + "");
         right.start.setName((numOfStates + 2 *//*start, end*//*+ 1) + "");
@@ -165,10 +190,12 @@ public class REtoNFA {
         nfa.states.add(left.start);
         nfa.states.add(left.end);
         for (int i = 0; i < left.states.size(); i++) {
+            left.states.get(i).setName((left.states.get(i).getName()+2)+"");
             nfa.states.add(left.states.get(i));
 
         }
         for (int i = 0; i < right.states.size(); i++) {
+            right.states.get(i).setName((right.states.get(i).getName()+4+left.states.size())+"");
             nfa.states.add(right.states.get(i));
         }
         nfa.states.add(right.start);
@@ -178,27 +205,32 @@ public class REtoNFA {
         return nfa;
     }
     public NFA starNFA(NFA first){
-        NFA nfa = new NFA(first.states.size()+2);
+        NFA nfa = new NFA(0);
+        int n =first.states.size();
+        nfa.end.setName(""+(n+3));
+        first.end.setName((n+2)+"");
         nfa.start.transitions.add(new Transition('$', first.end));
         nfa.start.transitions.add(new Transition('$', first.start));
+        first.start.setName(1+"");
         nfa.states.add(first.start);
         first.end.transitions.add(new Transition('$', nfa.end));
         first.end.transitions.add(new Transition('$', first.start));
-        for (int i = 0; i < first.states.size(); i++) {
+        for (int i = 0, j = 2; i < first.states.size(); i++, j++) {
+            first.states.get(i).setName(j+"");
             nfa.states.add(first.states.get(i));
         }
         nfa.states.add(first.end);
         //nfa.end.transitions.add(new Transition('$', first.start));
         return nfa;
     }
-    public void renameStates(NFA nfa){
+    public NFA renameStates(NFA nfa){
         nfa.start.setName(0 + "");
-        int name = 1;
-        for(State s : nfa.states){
-            s.setName(name + "");
-            name++;
+        int n = 1;
+        for (int i = 0; i < nfa.states.size(); i++, n++) {
+            nfa.states.get(i).setName(n+"");
         }
-        nfa.end.setName(name + "");
+        nfa.end.setName(n + "");
+        return nfa;
 
     }
 

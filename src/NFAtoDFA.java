@@ -9,8 +9,6 @@ public class NFAtoDFA {
             startState.states.addAll(epsilonClosure(nfa.start));
             dfaStates.add(startState);
             queue.add(startState);
-
-
             while (!queue.isEmpty()) {
                 DFAState currentState = queue.poll();
                 for (Character symbol : nfaSymbols) {
@@ -25,7 +23,6 @@ public class NFAtoDFA {
                     }
                 }
             }
-
             return dfaStates;
         }*/
         public DFA createDFAfromNFA(NFA nfa, ArrayList<Character> nfaSymbols){
@@ -39,24 +36,24 @@ public class NFAtoDFA {
             while(!queue.isEmpty()){
                 DFAState currState = queue.poll();
                 for (Character symbol : nfaSymbols){
-                    ArrayList<State> reachableStates = findReachableStates(currState, symbol);
+                    ArrayList<State> reachableStates = deleteRepeatedStates(findReachableStates(currState, symbol));
                     DFAState newState = new DFAState();
                     for(State state : reachableStates) {
-                        newState.states.addAll(epsilonClosure(state));
+                        newState.states.addAll(deleteRepeatedStates(epsilonClosure(state)));
                     }
+                    newState.states.addAll(reachableStates);
                     if (!newState.states.isEmpty() && !dfa.states.contains(newState)){
                         currState.transitions.add(new DFATransition(symbol, newState));
                         dfa.states.add(newState);
                         queue.add(newState);
+                        //currState.transitions.add(new DFATransition(symbol, newState));
                     }
-
                 }
             }
-
             return dfa;
         }
 
-        public static ArrayList<State> epsilonClosure(State state) {
+        public ArrayList<State> epsilonClosure(State state) {
             ArrayList<State> closureArray = new ArrayList<>();
             Stack<State> stack = new Stack<>();
 
@@ -76,16 +73,37 @@ public class NFAtoDFA {
             return closureArray;
         }
 
-        public static ArrayList<State> findReachableStates(DFAState state, Character symbol) {
+        public ArrayList<State> findReachableStates(DFAState state, Character symbol) {
             ArrayList<State> arrayList = new ArrayList<>();
             for (State s : state.states) {
                 for (Transition transition : s.transitions) {
                     if (transition.input == symbol) {
-                        arrayList.add(s);
+                        arrayList.add(transition.state);
                     }
                 }
             }
             return arrayList;
+        }
+        public ArrayList<State> deleteRepeatedStates(ArrayList<State> inputArray){
+            if ( inputArray.size() == 0) return  new ArrayList<>();
+            ArrayList<State> outputArray = new ArrayList<>();
+            boolean isRepeated = false;
+            outputArray.add(inputArray.get(0));
+            for (int i = 0; i < inputArray.size(); i++) {
+                isRepeated = false;
+                int j = 0;
+                for ( ; (j < i) ; j++){
+                    if (inputArray.get(i).transitions == outputArray.get(j).transitions){
+                        isRepeated = true;
+                        break;
+                    }
+                }
+                if(!isRepeated){
+                    //if (j !=0 ) outputArray.set(j, inputArray.get(i));
+                    /*else*/ outputArray.add(inputArray.get(i));
+                }
+            }
+            return outputArray;
         }
 
 }

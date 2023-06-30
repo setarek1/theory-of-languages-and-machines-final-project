@@ -15,6 +15,9 @@ public class State {
     public void setName(String n){
         name = n;
     }
+    public int getName(){
+        return Integer.parseInt(name);
+    }
     /*public State(){
         this.name =null;
     }*/
