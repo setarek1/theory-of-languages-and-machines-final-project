@@ -4,6 +4,7 @@ public class DFAState {
     String name;
     ArrayList<State> states;
     ArrayList<DFATransition> transitions;
+    boolean isFinal;
     public DFAState(){
         states = new ArrayList<>();
         transitions = new ArrayList<>();

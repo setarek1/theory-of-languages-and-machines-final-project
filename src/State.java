@@ -9,6 +9,7 @@ public class State {
     boolean isStart;
     boolean isEnd;
     State nextState;
+    boolean isVisited = false;
     public State(String name){
         this.name = name;
     }

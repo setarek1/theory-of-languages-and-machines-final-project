@@ -14,7 +14,7 @@ public class REtoNFA {
         NFA firstNFA, secondNFA, tempNFA;
         Stack<NFA> stack = new Stack<>();
         char[] REarray = computePostfix(addConcat(re)).toCharArray();
-        for (char c : REarray){
+        for (char c : REarray){ // age tuye input $ bashe -> bahash mesle char barkhord mikone -> doroste?
             switch(c){
                 case '+':
                     firstNFA = stack.pop();
@@ -161,7 +161,6 @@ public class REtoNFA {
         }
 
         result.states.add(first.end);
-
         result.states.add(second.end);
         //result.states.add(result.end);
         return result;
