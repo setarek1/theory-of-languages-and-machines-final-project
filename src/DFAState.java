@@ -14,5 +14,20 @@ public class DFAState {
         states = new ArrayList<>();
         name = num + "";
     }
+    public DFAState getStateFromInputName(char input){
+        for (DFATransition t : transitions){
+            if ( t.input == input)
+                return t.state;
+        }
+        return null;
+    }
+    public String getStateNameFromInputName(char input){
+        for (DFATransition t : transitions){
+            if ( t.input == input)
+                return t.state.name;
+        }
+        return null;
+    }
+
 
 }

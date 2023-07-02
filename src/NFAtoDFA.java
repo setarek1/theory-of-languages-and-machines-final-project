@@ -56,7 +56,7 @@ public class NFAtoDFA {
                 for (State s : newState.states) name += (s.name + ",");
                 if ((!newState.states.isEmpty()) && (!dfa.DFAstates.contains(newState)) && (!DFAStatesNames.contains(name))) {
                     newState.name = name;
-                    currState.transitions.add(new DFATransition(symbol, newState));
+                    currState.transitions.add(new DFATransition(symbol, newState)); // is it done? (DFA Transitions) <----
                     dfa.DFAstates.add(newState);
                     queue.add(newState);
                     DFAStatesNames.add(name);

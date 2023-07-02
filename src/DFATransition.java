@@ -11,4 +11,10 @@ public class DFATransition {
     public void setDFAState(DFAState state){
         this.state = state;
     }
+    public DFAState getDFAState(){
+        return state;
+    }public String getDFAStateName(){
+        return state.name;
+    }
+
 }
