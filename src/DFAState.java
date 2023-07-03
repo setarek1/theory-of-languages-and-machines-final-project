@@ -28,6 +28,16 @@ public class DFAState {
         }
         return null;
     }
+    public int getStateIndex(char input){
+        for (int i = 0; i < transitions.size(); i++) {
+            if ( transitions.get(i).input == input)
+                return i;
+        }
+        return -1;
+    }
+    public void setName(int i){
+        this.name = (i+"");
+    }
 
 
 }

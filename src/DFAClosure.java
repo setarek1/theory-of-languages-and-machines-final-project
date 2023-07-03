@@ -17,8 +17,10 @@ public class DFAClosure {
                 for ( Character c : symbols){
                     //String s1, s2;
                    // s1 = String.valueOf(dfa1.DFAstates.get(i).getStateFromInputName(c));
-                    finalDFAStates.get(i + j).transitions.add(new DFATransition(c, dfa1.DFAstates.get(i).getStateFromInputName(c)));
                     //finalDFAStates.get(i + j).transitions.add(new DFATransition(c, dfa1.DFAstates.get(i).getStateFromInputName(c)));
+                    //finalDFAStates.get(i + j).transitions.add(new DFATransition(c, dfa1.DFAstates.get(i).getStateFromInputName(c)));
+                    int s1, s2;
+                    //s1 = dfa1.DFAstates.get(i).transitions.
 
                 }
             }

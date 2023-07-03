@@ -68,7 +68,8 @@ public class NFAtoDFA {
                     dfaState.isFinal = true;
             }
         }
-        return dfa;
+        DFA finalDFa = createFinalDFA(dfa, nfa);
+        return finalDFa;
     }
 
     public ArrayList<State> epsilonClosure(State state) {
@@ -140,6 +141,32 @@ public class NFAtoDFA {
         ((!newState.states.isEmpty()) && (!dfa.DFAstates.contains(newState)) && (!stringExistsInNames(name, DFAStatesNames))){...}
          */
        return false;
+   }
+   public DFA createFinalDFA(DFA dfa, NFA nfa){
+        DFA finalDFa = new DFA();
+        int numOfDFAStates = dfa.DFAstates.size(); // + 1 : start?
+       finalDFa.start = new DFAState(0);
+       /*for (int i = 0; i <= numOfDFAStates; i++) {
+           finalDFa.DFAstates.add(new DFAState(i + 1)); // Q1 ... Qn : states
+       }
+       for (DFAState s : dfa.DFAstates){
+           for (Character c : dfa.getDFASymbols()){
 
+           }
+       }*/
+       dfa.start.name = "0";
+       for (int i = 0; i < numOfDFAStates; i++) {
+           dfa.DFAstates.get(i).setName(i+1);
+       }
+       //finalDFa = dfa;
+       for (DFAState dfaState : dfa.DFAstates){
+           boolean isFinal = false;
+           /*for (State s : dfaState.states){
+
+           }*/
+           if (dfaState.states.contains(nfa.end))
+               dfaState.isFinal = true;
+       }
+       return dfa;
    }
 }
