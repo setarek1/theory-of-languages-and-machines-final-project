@@ -53,6 +53,25 @@ public class Test {
         s.add(state3);
         ArrayList<State> o = nfaToDfa.deleteRepeatedStates(s);
         System.out.println("DONE");*/
+        DFA dfa1 = new DFA();
+        DFA dfa2 = new DFA();
+        DFAClosure closureProperties = new DFAClosure();
+        DFAState dfaState11 = new DFAState(1);
+        DFAState dfaState12 = new DFAState(1);
+        DFAState dfaState21 = new DFAState(2);
+        dfaState21.isFinal = true;
+        dfaState12.isFinal = true;
+        dfaState11.transitions.add(new DFATransition('b',dfaState21));
+        dfa1.start.transitions.add(new DFATransition('a',dfaState11));
+        dfa1.start.transitions.add(new DFATransition('b', dfaState21));
+        dfa1.start.name = "0";
+        dfa2.start.name = "0";
+        dfa1.DFAstates.add(dfaState11);
+        dfa1.DFAstates.add(dfaState21);
+        dfa2.start.transitions.add(new DFATransition('a', dfaState12));
+        dfa2.DFAstates.add(dfaState12);
+        DFA result = closureProperties.intersectionOfDFAs(dfa1,dfa2,nfaSymbols);
+        System.out.println(result);
 
     }
 }

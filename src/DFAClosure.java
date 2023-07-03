@@ -5,15 +5,22 @@ public class DFAClosure {
         int numOfStatesNeeded = dfa1.DFAstates.size() * dfa2.DFAstates.size();
         ArrayList<DFAState> finalDFAStates = new ArrayList<>();
         DFA finalDfa = new DFA();
-        finalDfa.start.name = "0,0";
-        finalDFAStates.add(finalDfa.start);
-        for (int i = 1; i < dfa1.DFAstates.size(); i++) {
-            for (int j = 1; j < dfa2.DFAstates.size(); j++) {
-                String name = dfa1.DFAstates.get(i).name + "," + dfa2.DFAstates.get(i).name;
-                DFAState newState = new DFAState();
-                newState.name = name;
-                finalDFAStates.add(newState);
-            }
+        //finalDfa.start.name = "0,0";
+        //finalDFAStates.add(finalDfa.start);
+        dfa1.DFAstates.add(0, dfa1.start);
+        dfa2.DFAstates.add(0, dfa2.start);
+        for (int i = 0; i < dfa1.DFAstates.size(); i++) {
+            for (int j = 0; j < dfa2.DFAstates.size(); j++) {
+                //if (i != 0 && j != 0 && i!=j){
+                    String name = dfa1.DFAstates.get(i).name + "," + dfa2.DFAstates.get(j).name;
+                    DFAState newState = new DFAState();
+                    newState.name = name;
+                    if (dfa1.DFAstates.get(i).isFinal && dfa2.DFAstates.get(j).isFinal)
+                        newState.isFinal = true;
+                    finalDFAStates.add(newState);
+                    if (i ==0 && j==0) finalDfa.start = newState;
+                }
+            //}
         }
         for (Character c : symbols){
             String s1 = dfa1.start.getStateNameFromInputName(c);
@@ -31,12 +38,13 @@ public class DFAClosure {
                     //s1 = dfa1.DFAstates.get(i).transitions.
                     String s1 = dfa1.DFAstates.get(i).getStateNameFromInputName(c);
                     String s2 = dfa2.DFAstates.get(j).getStateNameFromInputName(c);
-                    finalDFAStates.get((dfa2.DFAstates.size() + 1) * i + j).transitions.add(new DFATransition(c,getDFA(s1 + "," + s2, finalDFAStates)));
+                    finalDFAStates.get((dfa2.DFAstates.size()) * i + j).transitions.add(new DFATransition(c,getDFA(s1 + "," + s2, finalDFAStates)));
                                                             //+ 1 -> including start ?
                 }
             }
         }
-        return new DFA();
+        finalDfa.DFAstates = finalDFAStates;
+        return finalDfa;
     }
     public DFA DFAComplement(DFA dfa){
         dfa.start.isFinal = true;
