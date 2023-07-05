@@ -29,7 +29,7 @@ public class DFAState {
             if ( t.input == input)
                 return t.state.name;
         }
-        return null;
+        return "n";
     }
     public int getStateIndex(char input){
         for (int i = 0; i < transitions.size(); i++) {

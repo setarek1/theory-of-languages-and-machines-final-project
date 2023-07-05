@@ -52,6 +52,10 @@ public class REtoNFA {
         }
         nfaSymbols.add(c);
     }
+    ArrayList<Character> getNfaSymbols(){
+        nfaSymbols.remove(new Character('$')); // age $ be onvane vordu bude -> delete
+        return nfaSymbols;
+    }
     private static boolean comparePrecedence(char a, char b) {
         String precedence = "+.*";
         return precedence.indexOf(a) > precedence.indexOf(b);

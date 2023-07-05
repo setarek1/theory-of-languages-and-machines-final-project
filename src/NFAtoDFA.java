@@ -30,8 +30,14 @@ public class NFAtoDFA {
         Queue<DFAState> queue = new LinkedList<>();
         DFAState startState = new DFAState();
         ArrayList<String> DFAStatesNames = new ArrayList<>();
+        ArrayList<State> DFAStates_Start;
+        DFAStates_Start = epsilonClosure(nfa.start);
+        for (State s: DFAStates_Start){
+            if (s.equals(nfa.end))
+                startState.isFinal = true;
+        }
         startState.states.add(nfa.start);
-        startState.states.addAll(epsilonClosure(nfa.start));
+        startState.states.addAll(DFAStates_Start);
         dfa.start = startState;
         //dfa.states.add(dfa.start); ???
         queue.add(startState);
@@ -52,20 +58,25 @@ public class NFAtoDFA {
                 }
                 newState.states.addAll(epsilonStates);
                 newState.states.addAll(deleteRepeatedStates(reachableStates));
-                String name ="";
-                for (State s : newState.states) name += (s.name + ",");
-                if ((!newState.states.isEmpty()) && (!dfa.DFAstates.contains(newState)) && (!DFAStatesNames.contains(name))) {
-                    newState.name = name;
-                    currState.transitions.add(new DFATransition(symbol, newState)); // is it done? (DFA Transitions) <----
-                    dfa.DFAstates.add(newState);
-                    queue.add(newState);
-                    DFAStatesNames.add(name);
-                    //currState.transitions.add(new DFATransition(symbol, newState));
+                if (newState.states.equals(currState.states)) {
+                    currState.transitions.add(new DFATransition(symbol, currState)); // is it done? (DFA Transitions) <----
                 }
-            }
-            for (DFAState dfaState : dfa.DFAstates){
-                if (dfaState.name.equals(nfa.end.name + ",") || dfaState.equals(nfa.end))
-                    dfaState.isFinal = true;
+                else {
+                    String name = "";
+                    for (State s : newState.states) name += (s.name + ",");
+                    if ((!newState.states.isEmpty()) && (!dfa.DFAstates.contains(newState)) && (!DFAStatesNames.contains(name))) {
+                        newState.name = name;
+                        currState.transitions.add(new DFATransition(symbol, newState)); // is it done? (DFA Transitions) <----
+                        dfa.DFAstates.add(newState);
+                        queue.add(newState);
+                        DFAStatesNames.add(name);
+                        //currState.transitions.add(new DFATransition(symbol, newState));
+                    }
+                }
+                for (DFAState dfaState : dfa.DFAstates) {
+                    if (dfaState.name.equals(nfa.end.name + ",") || dfaState.equals(nfa.end))
+                        dfaState.isFinal = true;
+                }
             }
         }
         DFA finalDFa = createFinalDFA(dfa, nfa);
