@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class NFA {
+public class NFA implements Cloneable{
     State start, end;
     ArrayList<State> states = new ArrayList<>(); // not including start and end
     public NFA(int num){

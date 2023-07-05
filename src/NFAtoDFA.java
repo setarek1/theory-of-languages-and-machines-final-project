@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class NFAtoDFA {
+public class NFAtoDFA implements Cloneable {
     /*public static ArrayList<State> convertNFAToDFA(NFA nfa, ArrayList<Character> nfaSymbols) {
         ArrayList<DFAState> dfaStates = new ArrayList<>();
         Queue<DFAState> queue = new LinkedList<>();
@@ -74,7 +74,7 @@ public class NFAtoDFA {
                     }
                 }
                 for (DFAState dfaState : dfa.DFAstates) {
-                    if (dfaState.name.equals(nfa.end.name + ",") || dfaState.equals(nfa.end))
+                    if (dfaState.name.equals(nfa.end.name + ",") || dfaState.states.contains(nfa.end))
                         dfaState.isFinal = true;
                 }
             }
@@ -177,6 +177,8 @@ public class NFAtoDFA {
            }*/
            if (dfaState.states.contains(nfa.end))
                dfaState.isFinal = true;
+           else dfaState.isFinal = false;
+           //dfaState.setName(numOfDFAStates);
        }
        return dfa;
    }

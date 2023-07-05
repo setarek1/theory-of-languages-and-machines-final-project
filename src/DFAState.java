@@ -1,10 +1,11 @@
 import java.util.ArrayList;
 
-public class DFAState {
+public class DFAState implements Cloneable{
     String name;
     ArrayList<State> states;
     ArrayList<DFATransition> transitions;
     boolean isFinal;
+    //boolean isFinalComplement = !isFinal;
     public DFAState(){
         states = new ArrayList<>();
         transitions = new ArrayList<>();
@@ -29,7 +30,7 @@ public class DFAState {
             if ( t.input == input)
                 return t.state.name;
         }
-        return "n";
+        return null;
     }
     public int getStateIndex(char input){
         for (int i = 0; i < transitions.size(); i++) {
@@ -40,6 +41,23 @@ public class DFAState {
     }
     public void setName(int i){
         this.name = (i+"");
+    }
+    public boolean hasTransitionToFinal(){
+        for ( DFATransition transition : transitions){
+            if (transition.state != null && transition.state.isFinal)
+                return true;
+        }
+        return false;
+    }
+    public boolean hasLoop(){
+        for (DFATransition t : transitions){
+            if (t.state == null) return false;
+            if (t.state.name.equals(
+                    this.name)
+                /*&& t.state == this*/)
+                return true;
+        }
+        return false;
     }
 
 

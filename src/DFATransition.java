@@ -1,4 +1,4 @@
-public class DFATransition {
+public class DFATransition implements Cloneable{
     char input;
     DFAState state;
     public DFATransition(char c, DFAState state){
