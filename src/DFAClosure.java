@@ -126,7 +126,7 @@ public class DFAClosure implements Cloneable {
             boolean[] visited = new boolean[states.size()];
             //if(bfs(states, 0, finals.get(i)))
             if(bfs(states,0,finals.get(i),dfa2size)){
-                //System.out.println("bfs finished");
+                //System.out.println("bf");
                 return true;
             }
 
