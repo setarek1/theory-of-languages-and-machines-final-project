@@ -7,14 +7,11 @@ public class REtoNFA {
     private static ArrayList<Character> nfaSymbols = new ArrayList<>();
 
     public NFA createNFAFromRE(String re){
-        // add '.'
-        //String concatAdded = addConcat(re);
-        // postfix ->
-        // char array ->
+
         NFA firstNFA, secondNFA, tempNFA;
         Stack<NFA> stack = new Stack<>();
         char[] REarray = computePostfix(addConcat(re)).toCharArray();
-        for (char c : REarray){ // age tuye input $ bashe -> bahash mesle char barkhord mikone -> doroste?
+        for (char c : REarray){
             switch(c){
                 case '+':
                     firstNFA = stack.pop();
@@ -58,7 +55,7 @@ public class REtoNFA {
             if (c != '$')
                 returnArray.add(c);
         }
-        //returnArray.remove(new Character('$')); // age $ be onvane vordu bude -> delete
+        //returnArray.remove(new Character('$'));
         return returnArray;
     }
     private static boolean comparePrecedence(char a, char b) {
