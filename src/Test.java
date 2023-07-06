@@ -3,7 +3,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Test {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CloneNotSupportedException {
         /*REtoNFA reToNfa = new REtoNFA();
         //reToNfa.createNFAFromRE("(a+b)c+f");
         NFA nfa = new NFA(0);

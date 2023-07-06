@@ -1,6 +1,6 @@
 public class DFATransition implements Cloneable{
     char input;
-    DFAState state;
+    DFAState state = new DFAState();
     public DFATransition(char c, DFAState state){
         input = c;
         this.state = state;

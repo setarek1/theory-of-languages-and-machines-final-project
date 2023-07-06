@@ -4,7 +4,7 @@ import java.util.Stack;
 
 public class REtoNFA {
     private static final char[] nonSymbols = {'+', '*', '.', '(', ')'};
-    static ArrayList<Character> nfaSymbols = new ArrayList<>();
+    private static ArrayList<Character> nfaSymbols = new ArrayList<>();
 
     public NFA createNFAFromRE(String re){
         // add '.'
@@ -46,15 +46,20 @@ public class REtoNFA {
         return res;
     }
     private void addToSymbols(char c){
-        for (Character s : nfaSymbols){
+        for (Character s : this.nfaSymbols){
             if (s == c)
                 return;
         }
-        nfaSymbols.add(c);
+        this.nfaSymbols.add(c);
     }
-    ArrayList<Character> getNfaSymbols(){
-        nfaSymbols.remove(new Character('$')); // age $ be onvane vordu bude -> delete
-        return nfaSymbols;
+    public ArrayList<Character> getNfaSymbols(){
+        ArrayList<Character> returnArray =  new ArrayList<>();
+        for (Character c : this.nfaSymbols){
+            if (c != '$')
+                returnArray.add(c);
+        }
+        //returnArray.remove(new Character('$')); // age $ be onvane vordu bude -> delete
+        return returnArray;
     }
     private static boolean comparePrecedence(char a, char b) {
         String precedence = "+.*";

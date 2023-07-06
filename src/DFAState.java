@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class DFAState implements Cloneable{
-    String name;
+    String name = "ds";
     ArrayList<State> states;
     ArrayList<DFATransition> transitions;
     boolean isFinal;
