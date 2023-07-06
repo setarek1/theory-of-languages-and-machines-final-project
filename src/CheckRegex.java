@@ -33,8 +33,8 @@ public class CheckRegex implements Cloneable {
         //L2 = clone()
         //DFA L2complement = closureProperties.DFAComplement(L2);
         //DFA L1complement = closureProperties.DFAComplement(L1);
-        System.out.println(symbols1);
-        System.out.println(symbols2);
+        /*System.out.println(symbols1);
+        System.out.println(symbols2);*/
         if(symbols1.size() != symbols2.size()) {
             System.out.println("NOT EQUAL");
             return;
@@ -83,7 +83,7 @@ public class CheckRegex implements Cloneable {
             &&
             //&&
              (!closureProperties2.bfs2(L2_int_L1complement.finalsIndexForIntersection, 0, L2_int_L1complement.DFAstates, L1.DFAstates.size())))
-                System.out.println("EQUAL2");
+                System.out.println("EQUAL");
 
         /*if      (!closureProperties2.bfs2(L2_int_L1complement.finalsIndexForIntersection, 0,L2_int_L1complement.DFAstates))
             System.out.println("EQUAL2");*/

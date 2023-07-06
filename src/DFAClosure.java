@@ -151,7 +151,7 @@ public class DFAClosure implements Cloneable {
                 //if ( v.transitions.get(i).state.isFinal) return  true;
                 String[] name = v.transitions.get(i).state.name.split(",");
                 indx = Integer.parseInt(name[0]) * dfa2Size + dfa2Size+Integer.parseInt(name[1]);
-                //if(indx >= visited.length) return false;
+                if(indx >= visited.length) return false;
                 if (/*v.transitions.get(i).state != null && !v.transitions.get(i).state.isFinal &&*/ !visited[indx]){
                    /* String[] name = v.transitions.get(i).state.name.split(",");
                     indx = Integer.parseInt(name[0]) * Integer.parseInt(name[1]);*/
@@ -188,12 +188,12 @@ public class DFAClosure implements Cloneable {
 
         //if(finals.size() == 0) System.out.println("size zero");
         for (int i = 0; i < finals.size(); i++) {
-            System.out.print("i:"+i);
-            System.out.println("-"+finals.get(i));
+            /*System.out.print("i:"+i);
+            System.out.println("-"+finals.get(i));*/
             boolean[] visited = new boolean[states.size()];
             //if(bfs(states, 0, finals.get(i)))
             if(bfs(states,0,finals.get(i),dfa2size)){
-                System.out.println("D");
+                //System.out.println("D");
                 return true;
             }
 
