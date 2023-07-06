@@ -130,6 +130,7 @@ public class DFAClosure implements Cloneable {
                 return true;
             }
 
+
         }
         return false;
 
